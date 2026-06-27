@@ -3,10 +3,10 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'  # 推送 v1.0.0, v1.0.1 等标签时触发
+      - 'v*'
 
 permissions:
-  contents: write  # 允许创建 Release
+  contents: write
 
 jobs:
   release:
@@ -15,12 +15,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # 获取完整历史用于生成 changelog
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+          fetch-depth: 0
 
       - name: Get version from tag
         id: get_version
@@ -31,77 +26,61 @@ jobs:
           VERSION=${{ steps.get_version.outputs.VERSION }}
           PACKAGE_NAME="harness-builder-skill-${VERSION}"
           
-          # 创建临时目录
           mkdir -p "${PACKAGE_NAME}"
-          
-          # 复制标准 skill 文件
           cp SKILL.md "${PACKAGE_NAME}/"
           cp README.md "${PACKAGE_NAME}/"
           cp LICENSE "${PACKAGE_NAME}/"
           cp CONTRIBUTING.md "${PACKAGE_NAME}/"
           cp .gitignore "${PACKAGE_NAME}/"
-          
-          # 复制 references 目录
           cp -r references "${PACKAGE_NAME}/"
           
-          # 创建 ZIP
           zip -r "${PACKAGE_NAME}.zip" "${PACKAGE_NAME}/"
-          
-          # 计算文件大小
           ls -lh "${PACKAGE_NAME}.zip"
-          
-          echo "✓ Package created: ${PACKAGE_NAME}.zip"
 
       - name: Generate Release Notes
         id: release_notes
         run: |
           VERSION=${{ steps.get_version.outputs.VERSION }}
-          
-          # 获取上一个标签
           PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD~1 2>/dev/null || echo "")
           
           if [ -z "$PREVIOUS_TAG" ]; then
-            # 第一个 release，获取所有 commits
             CHANGELOG=$(git log --pretty=format:"- %s" --no-merges)
           else
-            # 获取两个标签之间的 commits
             CHANGELOG=$(git log --pretty=format:"- %s" --no-merges "${PREVIOUS_TAG}..HEAD")
           fi
           
-          # 构建 release notes
-          NOTES="## What's Changed
-
-${CHANGELOG}
-
-## Package Contents
-
-| File | Description |
-|------|-------------|
-| SKILL.md | Main documentation |
-| README.md | Bilingual documentation |
-| LICENSE | MIT License |
-| CONTRIBUTING.md | Contribution guidelines |
-| references/ | Architecture templates |
-
-## Installation
-
-\`\`\`bash
-# Download
-wget https://github.com/${{ github.repository }}/releases/download/${VERSION}/harness-builder-skill-${VERSION}.zip
-
-# Extract
-unzip harness-builder-skill-${VERSION}.zip
-
-# Install to OpenClaw
-cp -r harness-builder-skill-${VERSION} ~/.qclaw/workspace/skills/harness-builder
-\`\`\`
-
-**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREVIOUS_TAG}...${VERSION}"
-          
-          # 写入文件（处理多行）
-          echo "NOTES<<EOF" >> $GITHUB_OUTPUT
-          echo "$NOTES" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          {
+            echo "NOTES<<EOF"
+            echo "## What's Changed"
+            echo ""
+            echo "${CHANGELOG}"
+            echo ""
+            echo "## Package Contents"
+            echo ""
+            echo "| File | Description |"
+            echo "|------|-------------|"
+            echo "| SKILL.md | Main documentation |"
+            echo "| README.md | Bilingual documentation |"
+            echo "| LICENSE | MIT License |"
+            echo "| CONTRIBUTING.md | Contribution guidelines |"
+            echo "| references/ | Architecture templates |"
+            echo ""
+            echo "## Installation"
+            echo ""
+            echo '```bash'
+            echo "# Download"
+            echo "wget https://github.com/${{ github.repository }}/releases/download/${VERSION}/harness-builder-skill-${VERSION}.zip"
+            echo ""
+            echo "# Extract"
+            echo "unzip harness-builder-skill-${VERSION}.zip"
+            echo ""
+            echo "# Install to OpenClaw"
+            echo "cp -r harness-builder-skill-${VERSION} ~/.qclaw/workspace/skills/harness-builder"
+            echo '```'
+            echo ""
+            echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREVIOUS_TAG}...${VERSION}"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
@@ -120,5 +99,3 @@ cp -r harness-builder-skill-${VERSION} ~/.qclaw/workspace/skills/harness-builder
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Version**: ${{ steps.get_version.outputs.VERSION }}" >> $GITHUB_STEP_SUMMARY
           echo "**Package**: harness-builder-skill-${{ steps.get_version.outputs.VERSION }}.zip" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "📦 Download: https://github.com/${{ github.repository }}/releases/tag/${{ steps.get_version.outputs.VERSION }}" >> $GITHUB_STEP_SUMMARY
