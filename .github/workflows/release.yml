@@ -95,8 +95,7 @@ jobs:
 
       - name: Summary
         run: |
-          echo "## âœ… Release Created Successfully" >> $GITHUB_STEP_SUMMARY
+          echo "## âœ?Release Created Successfully" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Version**: ${{ steps.get_version.outputs.VERSION }}" >> $GITHUB_STEP_SUMMARY
           echo "**Package**: harness-builder-skill-${{ steps.get_version.outputs.VERSION }}.zip" >> $GITHUB_STEP_SUMMARY
-
