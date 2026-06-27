@@ -1,156 +1,266 @@
-# Harness Builder Skill
+<div align="center">
 
-构建组织级 AI Agent Harness 的完整工具链。
+# 🛡️ Harness Builder Skill
+
+**Build Organizational AI Agent Harness with Enterprise-Grade Security**
+
+[![GitHub release](https://img.shields.io/github/v/release/quick123-666/harness-builder-skill?include_prereleases)](https://github.com/quick123-666/harness-builder-skill/releases)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![OpenClaw](https://img.shields.io/badge/OpenClaw-Compatible-green.svg)](https://openclaw.ai)
+
+[Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Roadmap](#-roadmap)
+
+</div>
 
 ---
 
-## 快速开始
+## 📖 Overview
+
+Transform your AI agents from **Level 1/2** to **Level 3 Organizational Harness** in just 10 days with enterprise-grade security controls, audit trails, and agent coordination.
+
+```
+Level 1 (Personal) → Level 2 (Team) → Level 3 (Organizational)
+                                    ↑
+                              This Skill Helps
+```
+
+---
+
+## ✨ Features
+
+### 🔐 Three-Layer Protection Model
+
+| Layer | Description | Implementation |
+|-------|-------------|----------------|
+| **System Config** | Elevated permissions, protected files | OpenClaw config |
+| **Behavior Constraints** | AGENTS.md + SOUL.md rules | Markdown files |
+| **Audit Verification** | JSONL logs + automated reports | Cron + monitoring |
+
+### 🛡️ 13 Protection Rules
+
+**Deny Rules** (cannot be bypassed):
+- `R01` - Block `sudo` commands
+- `R02` - Protect `.env`, `*.key`, `*.pem` files
+- `R06` - Prevent `git push --force`
+
+**Ask Rules** (require user confirmation):
+- `R04` - Confirm file deletions
+- `R05` - Validate `rm -rf` operations
+
+**Warn Rules** (log and alert):
+- `R12` - Flag config file changes
+- `R13` - Alert on external script execution
+
+### 🔄 PWR Cycle (Plan → Work → Review)
+
+```
+┌─────────────┐      ┌─────────────┐      ┌─────────────┐
+│ Plan Agent  │ ───> │ Work Agent  │ ───> │Review Agent │
+│  (Read-only)│      │ (Isolated)  │      │ (Read-only) │
+└─────────────┘      └─────────────┘      └─────────────┘
+      │                    │                    │
+   Create Plan        Execute Plan         Verify Results
+```
+
+### 📊 Audit System
+
+- **JSONL Logs** - Every action recorded
+- **Daily Reports** - Automated compliance summaries
+- **Monitoring Skill** - Real-time violation alerts
+
+---
+
+## 🚀 Quick Start
+
+### Installation
+
+```bash
+# Option 1: Clone repository
+git clone https://github.com/quick123-666/harness-builder-skill.git
+
+# Option 2: Download release
+wget https://github.com/quick123-666/harness-builder-skill/releases/download/v1.0.0/harness-builder-skill-v1.0.0.zip
+
+# Install to OpenClaw
+cp -r harness-builder ~/.qclaw/workspace/skills/
+```
+
+### Usage
+
+```
+User: Help me upgrade my project to Level 3 organizational harness
+
+Agent (using this skill):
+Great! Before we start, I need to understand:
+
+1. Current state: Level 1 or Level 2?
+2. Goals: 3-layer protection, PWR cycle, audit system?
+3. Constraints: Tech stack, timeline, team size?
+4. Success criteria: How to verify?
+```
+
+---
+
+## 📋 Implementation Roadmap
+
+| Phase | Duration | Deliverables |
+|-------|----------|--------------|
+| **Phase 0** | 1 hour | Discovery questions (3+) |
+| **Phase 1** | 2 days | Architecture design + docs |
+| **Phase 2** | 2 days | MDM enforcement + verification |
+| **Phase 3** | 2 days | Audit hooks + logging |
+| **Phase 4** | 2 days | Protection rules (R01-R13) |
+| **Phase 5** | 2 days | PWR cycle + testing |
+| **Total** | **10 days** | Level 3 Harness ✅ |
+
+---
+
+## 📦 Package Contents
+
+```
+harness-builder/
+├── SKILL.md                          # Main documentation (18.5 KB)
+├── README.md                         # This file
+└── references/
+    ├── architecture-template.md      # Architecture design template
+    └── checklist.md                  # Implementation checklist
+```
+
+---
+
+## 🎯 Use Cases
+
+### ✅ Ideal For
+
+- Teams upgrading from Level 1/2 to Level 3
+- Organizations requiring audit trails
+- Projects with sensitive data protection needs
+- Multi-agent coordination requirements
+
+### ❌ Not For
+
+- Personal projects (use Level 1)
+- Simple automation tasks
+- Projects without security requirements
+
+---
+
+## 📊 Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                   Level 3 Harness                       │
+├─────────────────────────────────────────────────────────┤
+│  Layer 1: System Config                                 │
+│  ├── Elevated permissions                               │
+│  ├── Protected files (env, keys, secrets)               │
+│  └── Network whitelist                                  │
+├─────────────────────────────────────────────────────────┤
+│  Layer 2: Behavior Constraints                          │
+│  ├── AGENTS.md (project rules)                          │
+│  ├── SOUL.md (agent personality)                        │
+│  └── 13 Protection Rules                                │
+├─────────────────────────────────────────────────────────┤
+│  Layer 3: Audit Verification                           │
+│  ├── JSONL logs (audit/logs/)                          │
+│  ├── Daily/weekly reports (audit/reports/)             │
+│  └── Monitoring Skill (real-time alerts)               │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🔧 Configuration
+
+### Protected Files
+
+```json
+{
+  "protectedFiles": [
+    ".env",
+    ".env.*",
+    "*.key",
+    "*.pem",
+    "secrets/",
+    "credentials/"
+  ]
+}
+```
+
+### Blocked Commands
+
+```json
+{
+  "blockedCommands": [
+    "sudo *",
+    "rm -rf *",
+    "git push --force *"
+  ]
+}
+```
+
+---
+
+## 📈 Verification
+
+### MDM Validation
 
 ```powershell
-# 触发 skill
-"帮我把我的项目升级到 Level 3 组织级 Harness"
+# Run MDM verification script
+.\scripts\verify-mdm.ps1
+
+# Expected: 10/10 tests passed
+```
+
+### Protection Rules Test
+
+```powershell
+# Run protection rules test
+.\scripts\test-protection-rules.ps1
+
+# Expected: 12/12 rules working
 ```
 
 ---
 
-## 功能
+## 🤝 Contributing
 
-### 1. 三层防护模型
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-- Layer 1: 系统配置层（elevated 权限）
-- Layer 2: 行为约束层（AGENTS.md + SOUL.md）
-- Layer 3: 审计验证层（审计日志 + 定期验证）
-
-### 2. MDM 强制策略
-
-- 受保护文件清单
-- 阻止命令列表
-- 网络白名单
-- MDM 验证脚本
-
-### 3. 审计系统
-
-- JSONL 格式审计日志
-- 每日/每周审计报告
-- 审计监控 Skill
-
-### 4. 防护规则
-
-- R01-R13 规则体系
-- 配置层（deny）
-- 行为层（deny/ask/warn）
-
-### 5. PWR 循环
-
-- Plan Agent（只读，制定计划）
-- Work Agent（隔离，执行计划）
-- Review Agent（只读，审查结果）
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ---
 
-## 实施流程
+## 📝 License
 
-```
-Phase 0: Discovery（发现阶段）
-    ↓ 询问用户至少 3 个问题
-Phase 1: 架构设计（2 天）
-    ↓ 创建架构文档和设计
-Phase 2: MDM 强制策略（2 天）
-    ↓ 创建 MDM 配置和验证
-Phase 3: 审计 Hook（2 天）
-    ↓ 创建审计系统和日志
-Phase 4: 防护规则（2 天）
-    ↓ 创建规则文档和测试
-Phase 5: PWR 循环（2 天）
-    ↓ 创建 Agent Skills
-完成 ✅
-```
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 目录结构
+## 🙏 Acknowledgments
 
-```
-skills/harness-builder/
-├── SKILL.md                    # 主文档
-├── README.md                   # 本文件
-├── templates/
-│   ├── architecture-template.md    # 架构设计模板
-│   └── checklist.md                # 实施检查清单
-└── examples/
-    └── complete-example.md         # 完整示例
-```
+- OpenClaw Framework
+- Harness Engineering methodology
+- Community contributors
 
 ---
 
-## 模板
+## 📞 Support
 
-### 架构设计模板
-
-包含：
-- 三层防护模型设计
-- PWR 循环架构
-- 防护规则体系
-- 审计系统设计
-
-### 实施检查清单
-
-包含：
-- 5 阶段任务清单
-- 每日任务分解
-- 最终验收清单
-- 交付物清单
+- **Documentation:** [GitHub Wiki](https://github.com/quick123-666/harness-builder-skill/wiki)
+- **Issues:** [GitHub Issues](https://github.com/quick123-666/harness-builder-skill/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/quick123-666/harness-builder-skill/discussions)
 
 ---
 
-## 示例
+<div align="center">
 
-### 完整示例
+**[⬆ Back to Top](#-harness-builder-skill)**
 
-展示了一个 CLI 项目从 Level 1 升级到 Level 3 的完整过程：
+Made with ❤️ by [quick123-666](https://github.com/quick123-666)
 
-1. Discovery 阶段交互
-2. 10 天实施过程
-3. 每个阶段的输出
-4. 测试结果
-5. 最终验收报告
-
----
-
-## 质量保证
-
-### DO/DON'T 清单
-
-**✅ DO：**
-- 使用具体、可衡量的标准
-- 提供完整的模板
-- 记录详细的审计日志
-
-**❌ DON'T：**
-- 跳过发现阶段
-- 忽略用户约束
-- 缺少验证步骤
-
----
-
-## 适用场景
-
-- Level 1 → Level 3 升级
-- Level 2 → Level 3 升级
-- 新建 Level 3 项目
-- 安全增强项目
-
----
-
-## 技术栈支持
-
-- Node.js
-- Python
-- Go
-- 其他（可定制）
-
----
-
-## 版本历史
-
-- **v1.0.0** (2026-06-27)：初始版本，基于 bendiherness 项目经验
+</div>
