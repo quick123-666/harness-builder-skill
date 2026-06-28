@@ -12,90 +12,61 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Get version from tag
-        id: get_version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+      - name: Get version
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
 
-      - name: Create standard skill package
+      - name: Package skill
         run: |
-          VERSION=${{ steps.get_version.outputs.VERSION }}
-          PACKAGE_NAME="harness-builder-skill-${VERSION}"
-          
-          mkdir -p "${PACKAGE_NAME}"
-          cp SKILL.md "${PACKAGE_NAME}/"
-          cp README.md "${PACKAGE_NAME}/"
-          cp LICENSE "${PACKAGE_NAME}/"
-          cp CONTRIBUTING.md "${PACKAGE_NAME}/"
-          cp .gitignore "${PACKAGE_NAME}/"
-          cp -r references "${PACKAGE_NAME}/"
-          
-          zip -r "${PACKAGE_NAME}.zip" "${PACKAGE_NAME}/"
-          ls -lh "${PACKAGE_NAME}.zip"
-
-      - name: Generate Release Notes
-        id: release_notes
-        run: |
-          VERSION=${{ steps.get_version.outputs.VERSION }}
-          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD~1 2>/dev/null || echo "")
-          
-          if [ -z "$PREVIOUS_TAG" ]; then
-            CHANGELOG=$(git log --pretty=format:"- %s" --no-merges)
-          else
-            CHANGELOG=$(git log --pretty=format:"- %s" --no-merges "${PREVIOUS_TAG}..HEAD")
-          fi
-          
-          {
-            echo "NOTES<<EOF"
-            echo "## What's Changed"
-            echo ""
-            echo "${CHANGELOG}"
-            echo ""
-            echo "## Package Contents"
-            echo ""
-            echo "| File | Description |"
-            echo "|------|-------------|"
-            echo "| SKILL.md | Main documentation |"
-            echo "| README.md | Bilingual documentation |"
-            echo "| LICENSE | MIT License |"
-            echo "| CONTRIBUTING.md | Contribution guidelines |"
-            echo "| references/ | Architecture templates |"
-            echo ""
-            echo "## Installation"
-            echo ""
-            echo '```bash'
-            echo "# Download"
-            echo "wget https://github.com/${{ github.repository }}/releases/download/${VERSION}/harness-builder-skill-${VERSION}.zip"
-            echo ""
-            echo "# Extract"
-            echo "unzip harness-builder-skill-${VERSION}.zip"
-            echo ""
-            echo "# Install to OpenClaw"
-            echo "cp -r harness-builder-skill-${VERSION} ~/.qclaw/workspace/skills/harness-builder"
-            echo '```'
-            echo ""
-            echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREVIOUS_TAG}...${VERSION}"
-            echo "EOF"
-          } >> $GITHUB_OUTPUT
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          PACKAGE="harness-builder-skill-${VERSION}"
+          mkdir -p "${PACKAGE}"
+          cp SKILL.md README.md LICENSE CONTRIBUTING.md "${PACKAGE}/" 2>/dev/null || true
+          cp -r references "${PACKAGE}/" 2>/dev/null || true
+          zip -r "${PACKAGE}.zip" "${PACKAGE}"
+          echo "PACKAGE_NAME=${PACKAGE}.zip" >> "$GITHUB_OUTPUT"
+        id: package
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          name: Harness Builder Skill ${{ steps.get_version.outputs.VERSION }}
-          body: ${{ steps.release_notes.outputs.NOTES }}
-          files: harness-builder-skill-*.zip
-          draft: false
-          prerelease: false
+          name: "Harness Builder Skill ${{ steps.version.outputs.VERSION }}"
+          generate_release_notes: true
+          body: |
+            ## 🚀 Harness Builder Skill ${{ steps.version.outputs.VERSION }}
+            
+            ### 📦 Package Contents
+            
+            | File | Description |
+            |------|-------------|
+            | `SKILL.md` | Main documentation |
+            | `README.md` | Bilingual documentation (EN/中文) |
+            | `LICENSE` | MIT License |
+            | `CONTRIBUTING.md` | Contribution guidelines |
+            | `references/` | Architecture templates and checklists |
+            
+            ### 📥 Installation
+            
+            Download the ZIP and extract to your skills directory:
+            
+            ```bash
+            unzip harness-builder-skill-${{ steps.version.outputs.VERSION }}.zip
+            cp -r harness-builder-skill-${{ steps.version.outputs.VERSION }} ~/.qclaw/workspace/skills/harness-builder
+            ```
+            
+            ### 🤝 Contributing
+            
+            See [CONTRIBUTING.md](https://github.com/${{ github.repository }}/blob/main/CONTRIBUTING.md) for guidelines.
+            
+            ### 📄 License
+            
+            MIT License - see [LICENSE](https://github.com/${{ github.repository }}/blob/main/LICENSE) for details.
+          files: |
+            ${{ steps.package.outputs.PACKAGE_NAME }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Summary
-        run: |
-          echo "## �?Release Created Successfully" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Version**: ${{ steps.get_version.outputs.VERSION }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Package**: harness-builder-skill-${{ steps.get_version.outputs.VERSION }}.zip" >> $GITHUB_STEP_SUMMARY
